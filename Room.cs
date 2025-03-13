@@ -36,12 +36,16 @@ namespace DungeonExplorer
 
     public class ItemRoom : Room
     {
-        private List<string> inventory = new List<string>; 
-        public ItemRoom(string inventory) : base("This room has an item.");
+         
+        public ItemRoom() : base("This room has an item.")
         {
-            inventory.Add("Apple");
             Console.WriteLine("You have obtained an Apple.");
         }
+         public void GiveItemToPlayer(Player player)
+    {
+        player.PickUpItem("Apple"); 
+        Console.WriteLine("The Apple has been added to your inventory.");
+    }
     }
 
     public class EnemyRoom : Room
@@ -52,9 +56,9 @@ namespace DungeonExplorer
 
         }
         
-        public void AttackPlayer(int damage)
+        public void AttackPlayer(Player player)
         {
-            int damage = 20; 
+            int damage = 20;
             player.TakeDamage(damage);
             
         }
