@@ -52,7 +52,6 @@ namespace DungeonExplorer
     {
         public EnemyRoom() : base("You were attacked. You lost 20 health.")
         {
-            Console.WriteLine(GetDescription());
 
         }
         
