@@ -42,7 +42,7 @@ namespace DungeonExplorer
 
                     else if (NextAction == "move")
                     {
-                        Console.WriteLine("Moving to next room...")
+                        Console.WriteLine("Moving to next room...");
 
                         //randomly chooses out of the 2 rooms
 
