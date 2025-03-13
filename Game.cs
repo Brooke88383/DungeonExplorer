@@ -7,6 +7,7 @@ namespace DungeonExplorer
     {
         private Player player;
         private Room currentRoom;
+        Random random = new Random();
 
         public Game()
         {
@@ -41,8 +42,7 @@ namespace DungeonExplorer
 
                     else if (NextAction == "move")
                     {
-                        Console.WriteLine("Moving to next room...");
-                        Random random = new Random();
+                        Console.WriteLine("Moving to next room...")
 
                         //randomly chooses out of the 2 rooms
 
