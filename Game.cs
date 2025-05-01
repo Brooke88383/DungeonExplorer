@@ -1,5 +1,7 @@
-﻿using System;
+using System;
 using System.Media;
+using Microsoft.Win32;
+using static DungeonExplorer.GameMap;
 
 namespace DungeonExplorer
 {
@@ -8,66 +10,93 @@ namespace DungeonExplorer
         private Player player;
         private Room currentRoom;
         Random random = new Random();
+        
 
         public Game()
         {
-            // Initialize the game with one room and one player
+            
             Console.WriteLine("What is your name");
             string users_name = Console.ReadLine();
-            player = new Player($"{users_name}", 100);
-            currentRoom = new Room("Start");
+            player = new Player(100, 10, $"{users_name}");
+            
+            
+
 
         }
         public void Start()
         {
-            // Change the playing logic into true and populate the while loop
+            bool playing = true;
 
-            bool playing = true; 
             while (playing)
             {
                 Console.WriteLine("What action would you like to do?");
-                Console.WriteLine("inventory, Move to the next room or quit the game.");
-                string NextAction = Console.ReadLine().ToLower();
+                Console.WriteLine("Type 'inventory', 'move', or 'quit':");
+                string nextAction = Console.ReadLine().ToLower();
+
+                if (nextAction == "quit")
                 {
-                    if (NextAction == "quit")
+                    Console.WriteLine("Exiting... Thank you for playing.");
+                    playing = false;
+                }
+                else if (nextAction == "inventory")
+                {
+                    Console.WriteLine($"Inventory: {player.InventoryContents()}");
+                    if (!player.HasItems()) 
                     {
-                        Console.WriteLine("Exiting... Thank you for playing.");
-                        playing = false;
+                        Console.WriteLine("Your inventory is empty.");
                     }
-        
-                    else if (NextAction == "inventory")
+                    else
                     {
-                        Console.WriteLine($"You have {player.InventoryContents()}");
-                    }
+                        Console.WriteLine("Would you like to use an item? Type the item name or 'back' to return:");
+                        string itemName = Console.ReadLine();
 
-                    else if (NextAction == "move")
-                    {
-                        Console.WriteLine("Moving to next room...");
-
-                        //randomly chooses out of the 2 rooms
-
-                        int RoomType = random.Next(1, 3);
-                        if (RoomType == 1)
+                        if (!string.IsNullOrEmpty(itemName) && itemName.ToLower() != "back")
                         {
-                            EnemyRoom enemyRoom = new EnemyRoom();
-                            currentRoom = enemyRoom;
-                            Console.WriteLine(enemyRoom.GetDescription());
-                            enemyRoom.AttackPlayer(player);
+                            player.UseItem(itemName);
+                            
+
                         }
                         else
                         {
-                            ItemRoom itemRoom = new ItemRoom();
-                            currentRoom = itemRoom; 
-                            Console.WriteLine(itemRoom.GetDescription());
-                            player.PickUpItem("Apple");
+                            Console.WriteLine("Leaving inventory.");
                         }
                     }
-                    else Console.WriteLine("Invalid option please pick one of the three.");
-                    
+
+
 
                 }
-            
+                else if (nextAction == "move")
+                {
+                    Console.WriteLine("Moving to the next room...");
+
+                    
+                    int roomType = random.Next(1, 3);
+                    if (roomType == 1)
+                    {
+                        currentRoom = new EnemyRoom(Monster.Dragon); 
+                    }
+                    else
+                    {
+                        currentRoom = new ItemRoom();
+                    }
+
+                    Console.WriteLine(currentRoom.GetDescription());
+                    currentRoom.Interact(player); 
+                }
+                else
+                {
+                    Console.WriteLine("Invalid option. Please choose one of the three options.");
+                }
+
+                
+                if (player.Health <= 0)
+                {
+                    Console.WriteLine("You have been defeated. Game Over.");
+                    playing = false;
+                }
+            }
         }
     }
-    }
 }
+
+
